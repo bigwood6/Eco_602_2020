@@ -3,7 +3,7 @@ dpois(x = wiwa_counts, lambda = 4.0)
 
 dpois(x = 2, lambda = 4.0) * dpois(x = 6, lambda = 4.0)
 
-sum(log(dpois(x = wiwa_counts, lambda = 4.0)))
+sum(log(dpois(x = wiwa_counts, lambda = 1.67)))
 
 #find, load bird data
 dat_birds <- read.csv("https://michaelfrancenelson.github.io/eco_602_634_2020/data/bird.sta.csv", header = TRUE, sep = ",")
@@ -21,4 +21,5 @@ wiwa <- dat_all$WIWA
 hist(wiwa, breaks = 8, xlab = "Winter Wren Count", ylab = "Frequency", main = "Winter Wren Count Frequency")
 
 #to binomial dist
-sum(log(dbinom(wiwa, size = length(wiwa), mean(wiwa)/length(wiwa))))
+sum(log(dbinom(wiwa, 6, mean(wiwa)/6)))
+mean(wiwa)
