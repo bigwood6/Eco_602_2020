@@ -1,0 +1,117 @@
+---
+title: "Final Project"
+author: "Zachary Bigwood"
+date: "11/15/2020"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Here is a demonstration of how to use R Markdown!
+
+## How to Create a New R Markdown Notebook
+
+First you need to have RStudio open. Next you need to open the file menu and browse to "New File" and select "RMarkdown.." from that list. This will open the RMarkdown creation prompt where you can specify the title of the document, the author's name, and the format you want to use.
+
+RMarkdown documents can be used to create webpages that contain R code. This final project is an RMarkdown document itself! The uses are almost limitless.
+
+## Headers
+
+Headers are how we can create new chunks of text with a new title! We can change the size of the headers we want by varying the amounts of # we use. The more #'s you include in your header, the smaller the font size will be.
+
+## Document Text
+
+The text in an RMarkdown document is normal unless it is within a designated code chunk. Text is can be included under the headers easily enough by simply typing what you wish to include. There are no extra fancy steps required here to make the text show up.
+
+## Links and Images
+
+You can easily add links and images to your RMarkdown Document if you choose to do so.
+
+For example, the text we would use to add an image would be as follows: "![alt text][path to the image here]" whereas for a link to a website we simply include the URL within angle brackets and it will be turned into a link.
+
+An example of an image link:
+
+![alt text][C:\Users\zachary\Documents\GitHub\Eco_602_2020\images\monky.png]
+
+An example of a regular URL link:
+
+<https://www.patriots.com/fans/downloads-social-profile>
+
+## Making a New Code Chunk
+
+The shortcut key on Windows is Ctrl - Alt - I
+
+On Mac it is Command - Option - I
+
+If I press this key combo then Rstudio inserts a new code chunk for me
+
+If I want, I can give the chunk a name and it will appear in the navigation pane.
+
+```{r how to make a code chunk}
+
+```
+
+
+## Reading a csv file
+
+I'm going to read some data from a csv (comma-separated-values) file.
+
+I can use read.csv() along with the path to the file to read the data into a data.frame.
+
+Here's an example:
+
+```{r read_birds_data}
+
+require(here)
+
+dat_birds = read.csv(here("data", "hab.sta.csv"))
+dat_birds <- read.csv(here("data", "hab.sta.csv"))
+
+#testcomment
+
+print(dat_birds)
+
+```
+
+
+## Previewing the contents of a data.frame
+
+I can use the head() function to print the first few lines of a data.frame.
+
+Here's an example with the birds data
+
+```{r head function demo}
+
+head(dat_birds)
+
+```
+
+## Demo Plot
+
+I can use hist to plot a histogram
+
+When I plot aspect we have a truncated box at the end as aspect is only measured up to 360 degrees.
+
+```{r simple plot}
+
+ hist(dat_birds$aspect)
+
+```
+
+## How to customize a histogram
+I can title using the argument main = 
+
+
+```{r custom histogram}
+ hist(dat_birds$aspect, main =  "Histogram of study site aspect",
+      breaks = 36)
+
+
+
+```
+
