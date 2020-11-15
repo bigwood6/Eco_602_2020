@@ -38,7 +38,7 @@ For example, the text we would use to add an image would be as follows: "![alt t
 
 An example of an image using the "! [] () format:
 
-![](https://github.com/bigwood6/Eco_602_2020/blob/master/images/monky.PNG)
+![](images/monky.png "Smiling Monkey from Pirates of the Caribbean")
 
 
 An example of a regular URL link:
