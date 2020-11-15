@@ -12,37 +12,40 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Here is a demonstration of how to use R Markdown!
+# R Markdown Final Demonstration
 
-## How to Create a New R Markdown Notebook
+## The Basics
+
+### How to Create a New R Markdown Notebook
 
 First you need to have RStudio open. Next you need to open the file menu and browse to "New File" and select "RMarkdown.." from that list. This will open the RMarkdown creation prompt where you can specify the title of the document, the author's name, and the format you want to use.
 
 RMarkdown documents can be used to create webpages that contain R code. This final project is an RMarkdown document itself! The uses are almost limitless.
 
-## Headers
+### Headers
 
 Headers are how we can create new chunks of text with a new title! We can change the size of the headers we want by varying the amounts of # we use. The more #'s you include in your header, the smaller the font size will be.
 
-## Document Text
+### Document Text
 
 The text in an RMarkdown document is normal unless it is within a designated code chunk. Text is can be included under the headers easily enough by simply typing what you wish to include. There are no extra fancy steps required here to make the text show up.
 
-## Links and Images
+### Links and Images
 
 You can easily add links and images to your RMarkdown Document if you choose to do so.
 
 For example, the text we would use to add an image would be as follows: "![alt text][path to the image here]" whereas for a link to a website we simply include the URL within angle brackets and it will be turned into a link.
 
-An example of an image link:
+An example of an image using the "! [] () format:
 
-![alt text][C:\Users\zachary\Documents\GitHub\Eco_602_2020\images\monky.png]
+![](https://github.com/bigwood6/Eco_602_2020/blob/master/images/monky.PNG)
+
 
 An example of a regular URL link:
 
 <https://www.patriots.com/fans/downloads-social-profile>
 
-## Making a New Code Chunk
+### Making a New Code Chunk and Commenting Code
 
 The shortcut key on Windows is Ctrl - Alt - I
 
@@ -52,12 +55,14 @@ If I press this key combo then Rstudio inserts a new code chunk for me
 
 If I want, I can give the chunk a name and it will appear in the navigation pane.
 
-```{r how to make a code chunk}
+Comments can be added to your code chunks just like normal by using the # symbol.
 
+```{Example code chunk and how to make comments}
+##comments can be added to code chunks by using '#'
 ```
 
 
-## Reading a csv file
+### Reading a csv file
 
 I'm going to read some data from a csv (comma-separated-values) file.
 
@@ -72,46 +77,431 @@ require(here)
 dat_birds = read.csv(here("data", "hab.sta.csv"))
 dat_birds <- read.csv(here("data", "hab.sta.csv"))
 
-#testcomment
+```
+## Data Structures
 
-print(dat_birds)
+We have worked with four different data structures in this class. These structures are vectors, data.frames, matrices, and lists. I will provide brief examples of the follow structures as well as short explanations of what they are.
+
+### Vectors
+
+Vectors are basic data structures that we use in R. They contain elements of the same type and can be logical, integers, double, characters, complex, or raw data.
+
+You can use the function: "typeof()" to figure out what type of vector you are working with in R.
+
+You typically create Vectors using the "c()" function.
+
+```{r vectors}
+#example vector creation
+
+x = c(1,2,3,4,5)
+
+#what type is the vector we just made?
+
+typeof(x)
+```
+
+### Matrices
+
+Matrices are similar to vectors but they contain the dimension attribute. You can check for the attributes of a matrix by using the "attributes()" function. Alternatively you can find the dimension attribute by using the function "dim()"
+
+```{r matrices}
+#creating a matrix
+
+x = matrix(1:6, nrow = 3)
+
+#attributes of the matrix
+
+attributes(x)
+
+#dimensions of the matrix
+
+dim(x)
+```
+
+### Lists
+
+A list is a data structure that can have components of all types of mixed data.
+
+The way we can determine if something is a list or a vector is by again using the "typeof()" function. 
+
+You can create lists by using the "list()" function in R.
+
+
+```{r lists}
+
+## creating a list
+
+x = list("x" = 2.5, "y" = 7:9, "z" = FALSE)
+
+## checking type of our list
+
+typeof(x)
+
+#printing our list
+
+print(x)
 
 ```
 
+### Data Frames
 
-## Previewing the contents of a data.frame
+The data frame is created by reading the csv file to R studio and naming it dat_birds. We can then refer to this data by using our data frame named dat_birds so we don't need to be constantly calling the data in for every function.
 
-I can use the head() function to print the first few lines of a data.frame.
+I can then use the head() function to print the first few lines of a data.frame.
 
-Here's an example with the birds data
+Here's an example using the birds data.
 
 ```{r head function demo}
+require(here)
 
+#naming the data frame of our read in data
+
+dat_birds = read.csv(here("data", "hab.sta.csv"))
 head(dat_birds)
 
 ```
 
-## Demo Plot
+## Subsetting Operators and Functions
 
-I can use hist to plot a histogram
+Sometimes when we work in R we may need to focus on individual variables of a data set more than others. In this case it would make sense to subset our data so we only get these variables. I'll be explaining 4 methods of accomplishing this here.
 
-When I plot aspect we have a truncated box at the end as aspect is only measured up to 360 degrees.
+The first example is using brackets to select only a few variables in a data set.
 
-```{r simple plot}
+```{r []}
+#create a new variable to only select the first five variables
 
- hist(dat_birds$aspect)
+newvar = dat_birds[c(1:5)]
+
+#show the head of the new data with only the first five variables
+
+head(newvar)
+```
+Another method is to use the $ to specify exact variables we want to use in functions. We can also use this to specify ranges of data we want to look at. For example if we were only interested in the birds at basin D we could only call in the data where basin is equal to D.
+
+```{r $}
+#only basin D birds
+
+highbirds = dat_birds[which(dat_birds$basin=='D'),]
+head(highbirds)
+```
+
+A third method is the double bracket method. This is slightly more nuanced than the single bracket method because it allows for only a single element to be selected using character or integer indices. 
+
+I found the information for this method here: <https://cran.r-project.org/doc/manuals/R-lang.html#Indexing>.
+
+```{r [[]]}
+#double brackets allows for specific selection
+
+x = list('one', 'two', 'three')
+
+#comparison between single and double brackets
+
+y = x[1]
+class(y)
+
+y = x[[1]]
+class(y)
 
 ```
 
-## How to customize a histogram
-I can title using the argument main = 
+The final subsetting operator is the "subset()" function itself. This function allows us to create a subset of our data to the specifications we set. 
+
+For example we could only select birds with a slope % lower than 75 at elevations of 500 feet or more.
+
+```{r subset function}
+#create subset and select variables to keep
+
+dfive = subset(dat_birds, slope > 75 | elev > 500, select = c(basin, aspect, lat, long, elev, slope))
+head(dfive)
+```
+
+## Numerical Data Exploration
+
+A few of the numerical data exploration functions we talked about during the class were summary, mean, and standard deviation. These functions can all be applied to a dataset or variable and they will give us important information about variables or the data sets themselves
+
+Our first function is the summary function. Summary will give us the length, class, and mode of our variables if they are strings or it will determine the min, 1st quartile, median, mean, 3rd quartile and max values if the variable is an intetger. summary can be applied to the data set as a whole or just a few select variables depending on the type of analysis that needs to be done.
+```{r summary}
+#total summary
+
+summary(dat_birds)
+
+#summary of particular variable
+
+summary(dat_birds$elev)
+```
+
+The second numerical function is the "mean()" function. This function  returns an average for whatever range of data we specify.
+
+```{r mean}
+#mean of the elevation which is a variable in the birds data set
+
+mean(dat_birds$elev)
+
+#alternatively you can use it to find the mean of a list
+
+x = c(1,2,3,4,5)
+mean(x)
+
+```
+
+The last numerical function is "sd()" or standard deviation. Like the name suggests it can be used to find standard deviation of whatever we want assuming the values are logical.
+
+```{r sd}
+#we can use sd() to find the standard deviation of a variable
+
+sd(dat_birds$elev)
+
+#or we can use it to find the standard deviation of a list
+
+x = c(1,2,3,4,5)
+sd(x)
+```
+
+## Graphical Data Exploration
+
+The next section covers some of the different types of functions that we have used this semester to explore graphical data. 
+
+### Histograms
+
+The first of these functions is "par()". A function that can be used to set graphical parameters by specifying them as an argument or by passing them as a list of tagged values. In class we have used the par function to display multiple plots at once. We can also use "mar" within the "par()" function to create margins if we so choose.
+
+After I subset the data the next function is "main()" which is responsible for changing the title of the graph.
+
+Next, I change the name of the X axis using "xlab()" and change the name of the Y axis by using "ylab()".
+
+The function "col()" is responsible for changing the color of the histogram boxes. In this case I make the Chinstrap Penguin histogram red and the Adelie Penguin histogram blue.
+
+The "breaks()" function is used to suggest the number of cells for the histogram. R usually treats these as a suggestion so they may not be to your exact specification as is the case in my example. R will set the breakpoints to pretty values on it's own. 
+
+The "xlim()" and "ylim()" functions are used to set the limits of the X axis and Y axis respectively. 
+
+The function we can use to scale the text of our symbols or text of our axis is "cex()". Different variations of this function allow us to scale different things. For example "cex.axis()" is the axis scaler and "cex.main()" is the title scaler. 
+
+An example of all of these in use using the palmer penguins data is below.
+
+```{r hist et. all}
+#call palmer penguins
+
+require(palmerpenguins)
+
+#initial subset for the Gentoo penguins
+
+penguin_dat = droplevels(subset(penguins, species != "Gentoo"))
+
+#set the graphs to appear on the same row with 1 per column
+
+par(mfrow = c(1,2))
+
+#specify our two species of penguins into their own subsets
+
+dat_adelie = subset(penguin_dat, species == "Adelie")
+dat_chinstrap = subset(penguin_dat, species == "Chinstrap")
+
+#create two histograms with out set parameters.
+
+hgA <- hist(dat_chinstrap$flipper_length_mm, main = 'Chinstrap Flipper Length Frequency', xlab = 'Flipper Length in MM of Chinstrap', ylab = 'Frequency', col = "red", breaks = 5, xlim = c(170, 220), ylim = c(0, 30), cex = 2)
+hgB <- hist(dat_adelie$flipper_length_mm, main = 'Adelie Flipper Length Frequency', xlab = 'Flipper Length in MM of Adelie', ylab = 'Frequency', col = "blue", xlim = c(170, 220), ylim = c(0, 50), cex = 2)
+
+```
+
+### Scatterplots
+
+There are many similarities if we were to use the "plot()" function instead of "hist()". We can include an additional function, "pch()" which would allow us to specify what point shapes we want to use on our plot. 
+
+Here is an example of that using habitat data where I set the pch to be equal to 2 to change our points into triangles.
+
+I also used the required mar argument in my "par()" function. 
+
+```{r Plot}
+#set data frame
+
+data_habitat <- read.csv(here("data","hab.sta.csv"))
+
+#create variables from data frame
+
+elev <- data_habitat$elev
+slope <- data_habitat$slope
+aspect <- data_habitat$aspect
+ba <- data_habitat$ba.tot
+
+#par mar to return margins
+
+par("mar")
+
+#set parameters: 1 row with 3 graphs across
+
+par(mfrow = c(1,3))
+
+#3 separate graphs with all the required arguments
+
+plot(ba, slope, main = "Relationship between Basal Area and Slope", pch = 2, xlab = "Basal Area", ylab = "Slope", col = "blue", cex = 0.5, xlim = c(0, 225), ylim = c(0, 100))
+plot(ba, elev, main = "Relationship between Basal Area and Elevation", pch = 2, xlab = "Basal Area", ylab = "Elevation", col = "red", cex = 0.5, xlim = c(0, 225), ylim = c(100, 850))
+plot(ba, aspect, main = "Relationship between Basal Area and Aspect", pch = 2, xlab = "Basal Area", ylab = "Aspect", col = "green", cex = 0.5, xlim = c(0,225), ylim = c(0, 300))
+
+```
+
+### Boxplots
+
+Another of the graphing functions we used this semester was the "boxplot()" function. This function enables us to compare things directly against each other and find out the mean and quartile ranges of a variable by creating a boxplot of the variable.
+
+The function can take in any number of numerical vectors and create a boxplot for each one. We can then compare these directly against each other if we use the "par()" function to set rows beforehand. 
+
+Here is an example of the boxplot function in use comparing penguin data.
+
+```{r boxplot}
+# palmer penguin data again
+
+require(palmerpenguins)
+
+# creating a variable out of a subset of the species of penguin we want to look at.
+
+penguin_dat = droplevels(subset(penguins, species != "Gentoo"))
+
+# creating the boxplot itself and naming our axis and giving it a title
+
+boxplot(flipper_length_mm ~ species, data = penguin_dat, xlab = "Species of Penguin", ylab = "Flipper Length in mm", main = "Comparison of Flipper Length of Adelie and Chinstrap Penguins")
+
+```
 
 
-```{r custom histogram}
- hist(dat_birds$aspect, main =  "Histogram of study site aspect",
-      breaks = 36)
+## Distribution Functions
+
+This section covers some of the distribution functions we have used this semester.
+
+### Normal Distribution
+
+A few of the functions we worked with this semester generate normal distributions. These functions "dnorm()", "pnorm()", and "qnorm()" should create bell shaped curves that give us the mean of the data set with 50% of values on either side of the mean. 
+
+We can create some normal distributions using these functions. These normal distributions have some different requirements in order to find the distributions.
+
+"dnorm()" for example needs a vector of numbers, the mean, and the standard deviation. "pnorm()" has the same requirements as "dnorm()" but "qnorm()" needs to have a vector of probabilities, the mean, and the sd in order to find it's distribution.
+
+We can also set the lower.tail to be false to give us the reverse of what we expect the answer to be.
+
+Below are examples of each function.
+
+#### dnorm()
+
+```{r dnorm}
+
+# first we can create a simple sequence to use for our distributions
+
+x = seq(-20, 20, by =1)
+
+# then we can find the normal distribution of our sequence by giving it a mean and using a SD
+
+y = dnorm(x, mean = 3, sd = 2)
+
+#we can then plot our dnorm against our sequence and see the results
+
+plot(x,y, main = "DNorm")
+
+```
+
+#### pnorm()
+
+```{r pnorm}
+
+# lets make the sequence again for our vector
+
+x = seq(-20, 20, by =1)
+
+#this time we're going to be using pnorm but with the same mean and sd
+
+y = pnorm(x, mean = 3, sd = 2)
+
+#and we can plot that
+
+plot(x,y, main = "PNorm")
+
+# we can also use pnorm to find probabilities such as finding the chance to observe value less than 1.2
+
+pnorm(1.2, 2, 2)
+
+#as mentioned earlier we can set lower.tail to be false to determine the chance that a value will be greater than 1.2 rather than lower than 1.2
+
+pnorm(1.2, 2, 2, lower.tail = FALSE)
+
+```
+
+#### qnorm()
+
+```{r qnorm}
+
+#qnorm is a bit different because we're using probabilities we can still use a sequence though but it has to be between 0 and 1
+
+x = seq(0,1, by = 0.05)
+
+#we can still keep the same mean and sd though
+
+y = qnorm(x, mean = 3, sd = 2)
+
+#and again we can plot it and see what happens
+
+plot(x,y, main = "QNorm")
+
+```
 
 
+### Binomial Distribution
+
+We also worked with a few binomial distribution functions during the semester. These functions were "dbinom()", "pbinom()", and "qbinom()". 
+
+Similarly to the normal distributions these functions are similar but not quite the same. "dbinom()" and "pbinom()" require the same parameters, a vector of numbers, the number of trials, and a probability. "qbinom()" requires a vector of probabilities in lieu of a vector of numbers however.
+
+According to <https://www.rdocumentation.org/packages/stats/versions/3.3/topics/Binomial>, "dbinom()" gives us the density, "pbinom()" gives us the distribution function, and "qbinom()" gives the quantile function under which a given proportion of the binomial population lies.
+
+Below are some examples.
+
+#### dbinom()
+
+```{r dbinom}
+
+#Keeping with the theme I'm going to use sequences to give us our numbers again. Here I am creating 25 numbers with increments of one
+
+x = seq(0,25, by = 1)
+
+# next I'm going to name the binomial function. We already know our vector of numbers, X. The size is 25 so we can fill that in. For this example probability will be 50%.
+
+y = dbinom(x, 25, 0.5)
+
+#and we can plot our results
+
+plot(x,y, main = "DBinom")
+
+# we can also use dbinom to find exact counts for example this will find the chance for exactly 3 in pop of 4
+
+dbinom(3, 4, 0.75)
+
+```
+
+#### pbinom()
+
+```{r pbinom}
+
+#this function gives us the cumulative probability of an event occuring. an easy example is tossing a coin so lets do that 100 times
+
+x = seq(0,100, by = 1)
+
+#so our size is 100, probability is 50% and we have a number vector to use.
+
+y = pbinom(x, 100, 0.50)
+
+#and we can plot that
+
+plot(x, y, main = "PBinom")
+
+```
+
+#### qbinom()
+
+```{r qbinom}
+
+# we can use qbinom to find different quantiles of a distribution. So if a squirrel has a 15% chance of finding it's buried acorn again and it has buried 100 acorns we can find the bottom quantile of that using the following
+
+qbinom(.1, 100, 0.15)
+
+#this is the amount of acorns we could expect the squirrel to find again given the probabilities.
 
 ```
 
