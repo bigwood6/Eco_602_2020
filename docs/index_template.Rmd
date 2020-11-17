@@ -12,14 +12,12 @@ editor_options:
   chunk_output_type: console
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(message = FALSE)
 options(knitr.duplicate.label = TRUE)
 ```
-
 
 Everything above this line is the header.
 
@@ -102,29 +100,7 @@ print(char_vec)
 
 ## `data.frame()`
 
-Data frame contains columns
-
-How to subset a data frame:
-
-- If I know the name of a column, you can use the $ symbol to call that column.
-
-```{r data frame ex. 1}
-
-#build a data frame
-
-frame1 = data.frame(letters = c("a", "b", "c"),
-           numbers = c(1, 2, 3))
-
-#you can print the frame by using the print() function
-
-print(frame1)
-
-# subset the column by name
-
-frame1$letters
-
-```
-
+Type your data frame example here.
 
 ## `matrix()`
 
@@ -175,25 +151,3 @@ See the final project description for a list of the required functions.
 # Part 2: Data Anaylsis
 
 Your data analysis materials will go here.
-
-
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

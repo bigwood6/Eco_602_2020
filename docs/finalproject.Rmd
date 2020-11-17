@@ -1,20 +1,43 @@
 ---
-title: "Final Project"
+title: "ECo 602 - Analysis of Environmental Data"
+subtitle: "Final Project: Data Analysis"
 author: "Zachary Bigwood"
-date: "11/15/2020"
-output: 
+date: "Fall 2020"
+output:
   html_document:
+    theme: readable
     toc: TRUE
     toc_float: TRUE
+editor_options:
+  chunk_output_type: console
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# R Markdown Final Demonstration
+<style type="text/css" rel="stylesheet">
 
-## The Basics
+.btn {
+    border-width: 0 0 0 0;
+    font-weight: normal;
+    text-transform: none;
+}
+
+.btn-default {
+    color: #2ecc71;
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+</style>
+
+# R Markdown Final Demonstration 
+
+## The Basics {.tabset .tabset-pills}
 
 ### How to Create a New R Markdown Notebook
 
@@ -38,7 +61,7 @@ For example, the text we would use to add an image would be as follows: "![alt t
 
 An example of an image using the "! [] () format:
 
-![](images/monky.png "Smiling Monkey from Pirates of the Caribbean")
+![](images/monky.png "Smiling Monkey from the movie 'Pirates of the Caribbean'.")
 
 
 An example of a regular URL link:
@@ -68,6 +91,8 @@ I'm going to read some data from a csv (comma-separated-values) file.
 
 I can use read.csv() along with the path to the file to read the data into a data.frame.
 
+The functions "require()" or "library()" are included to access the attached packages that are already installed in R. Require is designed to be used within functions and returns a TRUE or FALSE value depending on if the package is found or not. Library would return an error if the package does not exist.
+
 Here's an example:
 
 ```{r read_birds_data}
@@ -78,7 +103,7 @@ dat_birds = read.csv(here("data", "hab.sta.csv"))
 dat_birds <- read.csv(here("data", "hab.sta.csv"))
 
 ```
-## Data Structures
+## Data Structure Functions {.tabset .tabset-pills}
 
 We have worked with four different data structures in this class. These structures are vectors, data.frames, matrices, and lists. I will provide brief examples of the follow structures as well as short explanations of what they are.
 
@@ -98,6 +123,10 @@ x = c(1,2,3,4,5)
 #what type is the vector we just made?
 
 typeof(x)
+
+#we can even print that out
+
+print(x)
 ```
 
 ### Matrices
@@ -145,27 +174,60 @@ print(x)
 
 ### Data Frames
 
-The data frame is created by reading the csv file to R studio and naming it dat_birds. We can then refer to this data by using our data frame named dat_birds so we don't need to be constantly calling the data in for every function.
+A data frame is made up of different columns containing different things.
 
-I can then use the head() function to print the first few lines of a data.frame.
+You can subset your data frames if you know the name of the columns.
+
+- You can do this by using the '$' symbol and then the name of the column. The return is only the data stored in that column.
 
 Here's an example using the birds data.
 
 ```{r head function demo}
-require(here)
 
-#naming the data frame of our read in data
+#how to build a data frame
 
-dat_birds = read.csv(here("data", "hab.sta.csv"))
-head(dat_birds)
+frame1 = data.frame(letters = c("a", "b", "c"),
+           numbers = c(1, 2, 3))
+
+#you can print the frame by using the print() function
+
+print(frame1)
+
+# subset the column by name
+
+frame1$letters
 
 ```
 
-## Subsetting Operators and Functions
+### Nrow and Ncol
+
+These two functions return the number of rows and columns present.
+
+Our argument, x, can be a vector, an array, a data frame, or NULL.
+
+An example of both in action using the penguin data set:
+
+```{r nrow and ncol}
+#show the number of rows in variable X
+
+x <- matrix(1,2,3,4:10)
+
+nrow(x)
+
+#show the number of columns in variable X
+
+ncol(x)
+
+```
+
+
+## Subsetting Operators and Functions {.tabset .tabset-pills}
 
 Sometimes when we work in R we may need to focus on individual variables of a data set more than others. In this case it would make sense to subset our data so we only get these variables. I'll be explaining 4 methods of accomplishing this here.
 
 The first example is using brackets to select only a few variables in a data set.
+
+### Single Brackets
 
 ```{r []}
 #create a new variable to only select the first five variables
@@ -176,7 +238,11 @@ newvar = dat_birds[c(1:5)]
 
 head(newvar)
 ```
+
+### $
+
 Another method is to use the $ to specify exact variables we want to use in functions. We can also use this to specify ranges of data we want to look at. For example if we were only interested in the birds at basin D we could only call in the data where basin is equal to D.
+
 
 ```{r $}
 #only basin D birds
@@ -185,9 +251,12 @@ highbirds = dat_birds[which(dat_birds$basin=='D'),]
 head(highbirds)
 ```
 
+### Double Brackets
+
 A third method is the double bracket method. This is slightly more nuanced than the single bracket method because it allows for only a single element to be selected using character or integer indices. 
 
 I found the information for this method here: <https://cran.r-project.org/doc/manuals/R-lang.html#Indexing>.
+
 
 ```{r [[]]}
 #double brackets allows for specific selection
@@ -204,6 +273,8 @@ class(y)
 
 ```
 
+### Subset
+
 The final subsetting operator is the "subset()" function itself. This function allows us to create a subset of our data to the specifications we set. 
 
 For example we could only select birds with a slope % lower than 75 at elevations of 500 feet or more.
@@ -215,9 +286,11 @@ dfive = subset(dat_birds, slope > 75 | elev > 500, select = c(basin, aspect, lat
 head(dfive)
 ```
 
-## Numerical Data Exploration
+## Numerical Data Exploration {.tabset .tabset-pills}
 
 A few of the numerical data exploration functions we talked about during the class were summary, mean, and standard deviation. These functions can all be applied to a dataset or variable and they will give us important information about variables or the data sets themselves
+
+### Summary
 
 Our first function is the summary function. Summary will give us the length, class, and mode of our variables if they are strings or it will determine the min, 1st quartile, median, mean, 3rd quartile and max values if the variable is an intetger. summary can be applied to the data set as a whole or just a few select variables depending on the type of analysis that needs to be done.
 ```{r summary}
@@ -229,6 +302,8 @@ summary(dat_birds)
 
 summary(dat_birds$elev)
 ```
+
+### Mean
 
 The second numerical function is the "mean()" function. This function  returns an average for whatever range of data we specify.
 
@@ -244,6 +319,8 @@ mean(x)
 
 ```
 
+### Standard Deviation
+
 The last numerical function is "sd()" or standard deviation. Like the name suggests it can be used to find standard deviation of whatever we want assuming the values are logical.
 
 ```{r sd}
@@ -257,7 +334,7 @@ x = c(1,2,3,4,5)
 sd(x)
 ```
 
-## Graphical Data Exploration
+## Graphical Data Exploration {.tabset .tabset-pills}
 
 The next section covers some of the different types of functions that we have used this semester to explore graphical data. 
 
@@ -306,7 +383,9 @@ hgB <- hist(dat_adelie$flipper_length_mm, main = 'Adelie Flipper Length Frequenc
 
 ### Scatterplots
 
-There are many similarities if we were to use the "plot()" function instead of "hist()". We can include an additional function, "pch()" which would allow us to specify what point shapes we want to use on our plot. 
+There are many similarities if we were to use the "plot()" function instead of "hist()". "Plot()" will create scatterplots instead of histograms though.
+
+We can include an additional function, "pch()" which would allow us to specify what point shapes we want to use on our plot. 
 
 Here is an example of that using habitat data where I set the pch to be equal to 2 to change our points into triangles.
 
@@ -338,6 +417,7 @@ plot(ba, slope, main = "Relationship between Basal Area and Slope", pch = 2, xla
 plot(ba, elev, main = "Relationship between Basal Area and Elevation", pch = 2, xlab = "Basal Area", ylab = "Elevation", col = "red", cex = 0.5, xlim = c(0, 225), ylim = c(100, 850))
 plot(ba, aspect, main = "Relationship between Basal Area and Aspect", pch = 2, xlab = "Basal Area", ylab = "Aspect", col = "green", cex = 0.5, xlim = c(0,225), ylim = c(0, 300))
 
+
 ```
 
 ### Boxplots
@@ -364,11 +444,11 @@ boxplot(flipper_length_mm ~ species, data = penguin_dat, xlab = "Species of Peng
 ```
 
 
-## Distribution Functions
+## Distribution Functions {.tabset .tabset-pills}
 
 This section covers some of the distribution functions we have used this semester.
 
-### Normal Distribution
+### Normal Distribution {.tabset .tabset-pills}
 
 A few of the functions we worked with this semester generate normal distributions. These functions "dnorm()", "pnorm()", and "qnorm()" should create bell shaped curves that give us the mean of the data set with 50% of values on either side of the mean. 
 
@@ -386,7 +466,7 @@ Below are examples of each function.
 
 # first we can create a simple sequence to use for our distributions
 
-x = seq(-20, 20, by =1)
+x = seq(-20, 20, length.out = 200)
 
 # then we can find the normal distribution of our sequence by giving it a mean and using a SD
 
@@ -394,7 +474,7 @@ y = dnorm(x, mean = 3, sd = 2)
 
 #we can then plot our dnorm against our sequence and see the results
 
-plot(x,y, main = "DNorm")
+plot(x,y, main = "DNorm", type = "l")
 
 ```
 
@@ -404,7 +484,7 @@ plot(x,y, main = "DNorm")
 
 # lets make the sequence again for our vector
 
-x = seq(-20, 20, by =1)
+x = seq(-20, 20, length.out = 200)
 
 #this time we're going to be using pnorm but with the same mean and sd
 
@@ -412,7 +492,7 @@ y = pnorm(x, mean = 3, sd = 2)
 
 #and we can plot that
 
-plot(x,y, main = "PNorm")
+plot(x,y, main = "PNorm", type = "l")
 
 # we can also use pnorm to find probabilities such as finding the chance to observe value less than 1.2
 
@@ -430,7 +510,7 @@ pnorm(1.2, 2, 2, lower.tail = FALSE)
 
 #qnorm is a bit different because we're using probabilities we can still use a sequence though but it has to be between 0 and 1
 
-x = seq(0,1, by = 0.05)
+x = seq(0,1, length.out = 200)
 
 #we can still keep the same mean and sd though
 
@@ -438,12 +518,12 @@ y = qnorm(x, mean = 3, sd = 2)
 
 #and again we can plot it and see what happens
 
-plot(x,y, main = "QNorm")
+plot(x,y, main = "QNorm", type = "l")
 
 ```
 
 
-### Binomial Distribution
+### Binomial Distribution {.tabset .tabset-pills}
 
 We also worked with a few binomial distribution functions during the semester. These functions were "dbinom()", "pbinom()", and "qbinom()". 
 
@@ -467,7 +547,7 @@ y = dbinom(x, 25, 0.5)
 
 #and we can plot our results
 
-plot(x,y, main = "DBinom")
+plot(x,y, main = "DBinom", type = "l")
 
 # we can also use dbinom to find exact counts for example this will find the chance for exactly 3 in pop of 4
 
@@ -489,7 +569,7 @@ y = pbinom(x, 100, 0.50)
 
 #and we can plot that
 
-plot(x, y, main = "PBinom")
+plot(x, y, main = "PBinom", type = "l")
 
 ```
 
@@ -505,3 +585,4 @@ qbinom(.1, 100, 0.15)
 
 ```
 
+# Part 2: Data Analysis
