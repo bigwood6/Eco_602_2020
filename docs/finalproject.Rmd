@@ -712,7 +712,7 @@ I conclude that the initial shapiro test I conducted was probably correct in tha
 
 No, Fit1 has much worse violations than all of the other models.
 
-## Model Interpretation {.tabset .tabset-pills}
+## Model Interpretation
 
 ### Coding section
 
