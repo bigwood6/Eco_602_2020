@@ -585,4 +585,218 @@ qbinom(.1, 100, 0.15)
 
 ```
 
-# Part 2: Data Analysis
+# Part 2: Data Analysis {.tabset .tabset-pills}
+
+This section is a complete data anaylsis example usuing the "Delomys" species data.
+
+## Numerical Exploration
+
+A code chunk that contains the function "summary()" used on both body mass and body length data columns.
+
+```{r delomyssummary}
+#open data
+
+require(here)
+dat_delomys <- read.csv(here("data", "delomys.csv"))
+
+#summary on body mass and body length
+
+summary(dat_delomys$body_length)
+summary(dat_delomys$body_mass)
+
+#shapiro test on these to test normality
+
+delomyslength <- dat_delomys$body_length
+delomysmass <- dat_delomys$body_mass
+delomyssspecies <- dat_delomys$bionmial
+shapiro.test(delomysmass)
+shapiro.test(delomyslength)
+```
+
+## Graphical Exploration
+
+You can adjust the size of plots by using the two functions "fig.height =" and "fig.width="
+
+Below I included a few different graphs:
+
+    A scatterplot of body mass and body length
+    A histogram of body mass
+    A histogram of body length
+    A conditional boxplot of body mass, conditioned on species (column binomial)
+    A conditional boxplot of body mass, conditioned on sex (column binomial)
+    A conditional boxplot of body mass, conditioned on both species and sex
+
+```{r delomys graphs, fig.width=11}
+#assorted graphs per the instructions
+
+plot(delomysmass, delomyslength, main = "Scatterplot of Body Mass and Body Length", xlab = "Body Mass", ylab = "Body Length")
+
+hist(delomysmass, main = "Body Mass Histogram", xlab = "Body Mass")
+
+hist(delomyslength, main = "Body Length Histogram", xlab = "Body Length")
+
+boxplot(body_mass ~ binomial, data = dat_delomys, xlab = "Species of Delomys", ylab = "Body Mass", main = "Conditional Boxplot of Bodymass Conditioned on Species")
+
+boxplot(body_mass ~ sex, data = dat_delomys, xlab = "Sex of Delomys", ylab = "Body Mass", main = "Conditional Boxplot of Bodymass Conditioned on Sex")
+
+boxplot(body_mass ~ binomial * sex, data = dat_delomys, xlab = "Delomys Species and Sex", ylab = "Body Mass", main = "Conditional Boxplot of Bodymass Conditioned on Species and Sex")
+
+```
+
+Questions:
+
+1. Qualitatively describe the relationship between body mass and length.
+
+The relationship between body mass and length seems to be relatively linear because as Body Mass increases so does Body Length.
+
+2. Quantitatively describe the shapes of the histograms.
+
+I would argue that the Body Mass histogram is normally distributed whereas the Body Length histogram is skewed the the left. The normal distribution in the Body Mass histogram is due to the almost bell shaped looking curve while the Body Length histogram has more data points to the higher side of the mean causing the histogram to be skewed.
+
+3. Using both the histograms and normality tests, do you think the (unconditioned) body masses and body length are normally-distributed?
+
+Using the normality shapiro tests it would seem that both distributions are not normal due to the P values that are smaller than 0.05. I would probably agree with our tests because even if the data looks normally distributed it's possible that it is actually skewed one way or another.
+
+4. Examine the conditional boxplots. Describe any graphical evidence you see for body mass differences based on species and/or sex.
+
+Looking at the boxplots it seems that the Delomys Dorsalis species is heavier on average than the Delomys Sublineatus species. Also the male sex of Delomys are heavier than the female ones and this holds true for both species.
+
+## Model Building
+
+Next we will be creating some models of regression.
+
+```{r models}
+#assorted regression modeling
+
+fit1 = lm(body_length ~ body_mass, data = dat_delomys)
+fit2 = lm(body_mass ~ sex, data = dat_delomys)
+fit3 = lm(body_mass ~ binomial, data = dat_delomys)
+fit4 = lm(body_mass ~ sex + binomial, data = dat_delomys)
+fit5 = lm(body_mass ~ sex * binomial, data = dat_delomys)
+
+```
+
+## Model Diagnostics
+
+Do our models fufill the assumption of normality of the residuals?
+
+We can use a graphical approach to test this:
+
+```{r diagnostics}
+# creating histograms of residuals
+
+hist(residuals(fit1), main = "Histogram of Fit1")
+shapiro.test(residuals(fit1))
+
+hist(residuals(fit2), main = "Histogram of Fit2")
+shapiro.test(residuals(fit2))
+
+hist(residuals(fit3), main = "Histogram of Fit3")
+shapiro.test(residuals(fit3))
+
+hist(residuals(fit4), main = "Histogram of Fit4")
+shapiro.test(residuals(fit4))
+
+hist(residuals(fit5), main = "Histogram of Fit5")
+shapiro.test(residuals(fit5))
+
+```
+
+Questions:
+
+1. What do you conclude about residual normality based on the numerical and graphical diagnostics?
+
+I conclude that the initial shapiro test I conducted was probably correct in that our histograms aren't normally distributed. Some of the histograms do look like they could be normally distributed but all of our P-values say otherwise.
+
+2. Are violations of the normality assumption equally severe for all the models?
+
+No, Fit1 has much worse violations than all of the other models.
+
+## Model Interpretation {.tabset .tabset-pills}
+
+### Coding section
+
+```{r interpretation}
+
+knitr::kable(coef(summary(fit1)), digits = c(4, 2, 2, 20))
+knitr::kable(anova(fit1), digits = c(4, 2, 2, 20))
+
+knitr::kable(coef(summary(fit2)), digits = c(4, 2, 2, 20))
+knitr::kable(anova(fit2), digits = c(4, 2, 2, 20))
+
+knitr::kable(coef(summary(fit3)), digits = c(4, 2, 2, 20))
+knitr::kable(anova(fit3), digits = c(4, 2, 2, 20))
+
+knitr::kable(coef(summary(fit4)), digits = c(4, 2, 2, 20))
+knitr::kable(anova(fit4), digits = c(4, 2, 2, 20))
+
+knitr::kable(coef(summary(fit5)), digits = c(4, 2, 2, 20))
+knitr::kable(anova(fit5), digits = c(4, 2, 2, 20))
+
+```
+### Body Length
+
+1. What is the magnitude of the mass/length relationship?
+
+The magnitude of the mass/length relationship is the positive relationship between body length and body mass. In this case the number is 0.87549.
+
+2. What is the expected body length of an an animal that weighs 100g?
+
+The expected body length of an animal that weighs 100g is 76.1247 + 0.8755 * 100 = 163.6747 mm.
+
+3. What is the expected body length of an animal that weighs 0g?
+
+The expected body length of an animal that weighs 0g is 76.1247 mm.
+
+### Body Mass: Model Coefficients
+
+1. What is the base level for sex?
+
+The base level for sex is 42.7115.
+
+2. What is the base level for binomial?
+
+The base level for binomial is 46.7524
+
+3. Which sex is heavier?
+
+The Male sex is heavier.
+
+4. Which species is heavier?
+
+The Delomys Dorsalis species is heavier.
+
+### Body Mass: ANOVA
+
+1. Are sex and species significant predictors for body mass?
+
+I would argue that since both P values are lower than 0.05 then both sex and species are significant predictors for body mass.
+
+2. Is there a significant interaction?
+
+I think that if we look at the additive model we can see that the P values are low enough to suffest we have a significant interaction between the variables.
+
+3. Does the significance (as measured by p-value) of either of the main effects (sex and species) differ much between the single-predictor models, the additive model, and the interactive model?
+
+The significance of the species differs between the factorial model and the rest of the bunch by quite a high amount. With a P value of 0.95 this would indicate that this variable is insignificant when used to measure the others. 
+
+### Model Comparison: Body Mass
+
+```{r AICs}
+
+AIC(fit2)
+AIC(fit3)
+AIC(fit4)
+AIC(fit5)
+
+```
+
+
+1. Which two models have the lowest AIC?
+
+The two models with the lowest AIC are fit4 and fit5 which are the 2-way additive ANOVA body_mass ~ sex + binomial
+and the 2-way factorial ANOVA body_mass ~ sex * binomial respectively.
+
+2. Which of the two models with lowest AIC scores would you select?
+
+I would select the 2-way factorial model in this situation because it includes more data to use to make comparisons between the sex and species and Delomys and it has a higher AIC than the additive model. I think that even though the factorial model is slightly more complex the information we can gain from it is more important than the extra effort it takes in interpretation of the model. 
